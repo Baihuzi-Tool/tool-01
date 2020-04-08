@@ -41,15 +41,27 @@ class Parse
         }
         
         $csvFile = Writer::createFromPath('php://temp', 'w');
-
+        
         foreach ($csv as $k => $record) {
             
             if ($k == 0) {
-                $csvFile->insertOne(explode("\t", $record[0]));
+                if (sizeof($record) > 1) {
+                    $csvFile->insertOne($record);
+                }
+                else {
+                    $csvFile->insertOne(explode("\t", $record[0]));
+                }
+                
             }
             else {
-                $res = explode("\t", $record[0]);
-
+                if (sizeof($record) > 1) {
+                    $res = $record;
+                    
+                }
+                else {
+                    $res = explode("\t", $record[0]);
+                }
+                
                 if (in_array((int)trim($res[0]), $ids)) {
                     //echo "1\n";
                     $csvFile->insertOne($res);
